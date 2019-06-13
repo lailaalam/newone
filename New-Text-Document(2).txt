@@ -1,0 +1,324 @@
+.........................database.............................................
+
+#MySql Data Configuration
+spring.datasource.driver = com.mysql.jdbc.Driver
+spring.datasource.url=jdbc:mysql://localhost:3306/coursedb
+spring.datasource.username=root
+spring.datasource.password=
+
+#Thymeleaf Configuration
+
+spring.thymeleaf.suffix=.html
+spring.thymeleaf.cache = false
+#DAO Configuration
+
+
+spring.jpa.show-sql = true
+
+ Hibernate ddl auto (create, create-drop, validate, update)
+ spring.jpa.hibernate.ddl-auto = update
+
+spring.jpa.properties.hibernate.dialect = org.hibernate.dialect.MySQL5Dialect
+
+
+
+..........................Modal..............................................
+package com.example.course.Modal;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+
+@Entity
+@Table(name = "course")
+public class Course {
+    @Id
+    @Column(name = "course_code")
+    @NotNull(message = "This field Can Not be NULL")
+    private String courseCode;
+
+
+
+    @Column(name = "course_name")
+    private String courseName;
+
+
+
+    @Column(name = "course_credit")
+    private int courseCredit;
+
+    public String getCourseCode() {
+        return courseCode;
+    }
+
+    public String getCourseName() {
+        return courseName;
+    }
+
+    public int getCourseCredit() {
+        return courseCredit;
+    }
+
+    public void setCourseCode(String courseCode) {
+        this.courseCode = courseCode;
+    }
+
+    public void setCourseName(String courseName) {
+        this.courseName = courseName;
+    }
+
+    public void setCourseCredit(int courseCredit) {
+        this.courseCredit = courseCredit;
+    }
+
+    @Override
+    public String toString() {
+        return "Course{" +
+                "courseCode='" + courseCode + '\'' +
+                ", courseName='" + courseName + '\'' +
+                ", courseCredit=" + courseCredit +
+                '}';
+    }
+
+    public Course() {
+        courseCode="1";
+        courseCredit=0;
+        courseCode="";
+    }
+}
+
+
+
+............................................repository....................................................
+package com.example.course.Repository;
+
+import com.example.course.Modal.Course;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import javax.transaction.Transactional;
+
+@Repository
+@Transactional
+public interface CourseRepository extends JpaRepository<Course,String> {
+
+}
+
+
+........................................service(1)...........................................................
+package com.example.course.Service;
+
+import com.example.course.Modal.Course;
+
+import java.util.List;
+
+public interface CourseService {
+    public List<Course> getAllCourses();
+    public Course getCourseById(String courseCode);
+    public void saveOrUpdate(Course course);
+    public void removeCourse(String courseCode);
+
+}
+
+
+..............................................serviceImpl.......................................................
+package com.example.course.Service;
+
+import com.example.course.Modal.Course;
+import com.example.course.Repository.CourseRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import javax.transaction.Transactional;
+import java.util.List;
+
+@Service
+@Transactional
+public class CourseServiceImpl implements CourseService  {
+    @Autowired
+    CourseRepository crp;
+    @Override
+    public List<Course> getAllCourses() {
+        return crp.findAll();
+    }
+
+    @Override
+    public Course getCourseById(String courseCode) {
+        return crp.getOne(courseCode);
+    }
+
+    @Override
+    public void saveOrUpdate(Course course) {
+        crp.save(course);
+
+    }
+
+    @Override
+    public void removeCourse(String courseCode) {
+        crp.deleteById(courseCode);
+
+    }
+}
+
+
+.........................................controller.......................................
+package com.example.course.Controller;
+
+
+import com.example.course.Modal.Course;
+import com.example.course.Service.CourseService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.ModelAndView;
+
+import java.util.List;
+
+@RequestMapping("/courses")
+@Controller
+public class courseController {
+    @Autowired
+    private CourseService courseService;
+
+    @RequestMapping(value = "/a",method = RequestMethod.GET)
+    public ModelAndView showAllCourses(){
+
+        ModelAndView allCourses=new ModelAndView("Course.html");
+        List<Course> list= courseService.getAllCourses();
+        allCourses.addObject("courses",list);
+
+
+
+        return allCourses;
+    }
+
+    @RequestMapping(value = "/addNew",method = RequestMethod.GET)
+    public ModelAndView addNewCourse(){
+
+        ModelAndView allCourses=new ModelAndView( "courseForm.html");
+        Course course=new Course();
+        allCourses.addObject("course",course);
+        //allRooms.setViewName("roomForm");
+        return allCourses;
+
+    }
+
+    @RequestMapping(value = "/save",method = RequestMethod.POST)
+    public ModelAndView saveCourse(@ModelAttribute("course") Course course){
+        System.out.println(course.toString());
+
+        courseService.saveOrUpdate(course);
+        return new ModelAndView("redirect:/courses/a");
+
+    }
+
+    @RequestMapping(value = "/edit/{courseCode}",method = RequestMethod.GET)
+    public ModelAndView updateCourse(@PathVariable("courseCode") String courseCode){
+
+        ModelAndView mv=new ModelAndView("courseForm.html");
+        Course course =courseService.getCourseById(courseCode);
+        mv.addObject(course);
+        // mv.setViewName("roomForm");
+        return mv;
+
+    }
+
+    @RequestMapping(value = "/remove/{courseCode}",method = RequestMethod.GET)
+    public ModelAndView removeCourse(@PathVariable("courseCode") String courseCode){
+
+        courseService.removeCourse(courseCode);
+
+        return new ModelAndView("redirect:/courses/a");
+    }
+
+
+
+}
+
+
+.............................Course.html...............................................
+<!DOCTYPE html>
+<html lang="en" xmlns: th="http://www.thymeleaf.org" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h1>Display Courses</h1>
+<table border="1">
+
+    <thead>
+    <tr>
+        <th>Course Code</th>
+        <th>Course Name</th>
+        <th>Course Credit</th>
+
+        <th>Action</th>
+    </tr>
+
+    </thead>
+
+
+    <tbody>
+
+    <a th:href="@{/courses/addNew}" >Add New Course</a> <tr th:each="course: ${courses}">
+
+        <td th:text="${course.courseCode}"></td>
+
+        <td th:text="${course.courseName}"></td>
+        <td th:text="${course.courseCredit}"></td>
+        <td>
+
+        <a role="button" th:href="@{'/courses/edit/'+ ${course.courseCode}}">EDIT </a>
+            <a role="button" th:href="@{'/courses/remove/' +${course.courseCode}}">Delete</a>
+
+    </td>
+
+
+    </tr>
+    </tbody>
+
+    <tfoot>
+
+    </tfoot>
+</table>
+
+</body>
+</html>
+
+
+
+
+.....................................courseForm.html....................................
+<!DOCTYPE html>
+<html lang="en" xmlns: th="http://www.thymeleaf.org" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form method="post" th:object="${course}" th:action="@{/courses/save}"> <label>Enter Course Code : </label>
+
+    <input type="text" th:field="*{courseCode}" th:value="${course.getCourseCode()}" placeholder="Enter Course Code">
+
+    <br><hr><label>Enter Course Name : </label>
+
+    <input type="text" th:field="*{courseName}" th:value="${course.getCourseName()}" placeholder="Enter Course Name">
+    <br><hr><label>Enter Course Credit: </label>
+
+    <input type="text" th:field="*{courseCredit}" th:value="${course.getCourseCredit()}" placeholder="courseCredit">
+
+
+    <input type="submit" value="Save">
+
+</form>
+
+
+</body>
+</html>
+

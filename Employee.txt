@@ -1,0 +1,290 @@
+.............................database..................................
+#MySql Data Configuration
+spring.datasource.driver = com.mysql.jdbc.Driver
+spring.datasource.url=jdbc:mysql://localhost:3306/employee
+spring.datasource.username=root
+spring.datasource.password=
+
+#Thymeleaf Configuration
+
+spring.thymeleaf.suffix=.html
+spring.thymeleaf.cache = false
+#DAO Configuration
+
+
+spring.jpa.show-sql = true
+
+#Hibernate ddl auto (create, create-drop, validate, update)
+spring.jpa.hibernate.ddl-auto = update
+
+spring.jpa.properties.hibernate.dialect = org.hibernate.dialect.MySQL5Dialect
+
+
+
+.......................................model.................................
+package com.example.dildo.Model;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+
+@Entity
+@Table(name = "employee")
+public class Employee {
+    @Id
+    @Column(name = "employee_id")
+    @NotNull(message = "This field Can Not be NULL")
+  private   String employeeId;
+
+
+    @Column(name = "employee_email")
+ private String employeeEmail;
+
+
+    @Column(name = "employee_password")
+  private   String employeePassword;
+
+    public String getEmployeeId() {
+        return employeeId;
+    }
+
+    public void setEmployeeId(String employeeId) {
+        this.employeeId = employeeId;
+    }
+
+    public String getEmployeeEmail() {
+        return employeeEmail;
+    }
+
+    public void setEmployeeEmail(String employeeEmail) {
+        this.employeeEmail = employeeEmail;
+    }
+
+    public String getEmployeePassword() {
+        return employeePassword;
+    }
+
+    public void setEmployeePassword(String employeePassword) {
+        this.employeePassword = employeePassword;
+    }
+
+    @Override
+    public String toString() {
+        return "Employee{" +
+                "employeeId='" + employeeId + '\'' +
+                ", employeeEmail='" + employeeEmail + '\'' +
+                ", employeePassword='" + employeePassword + '\'' +
+                '}';
+    }
+    public Employee(){
+        this.employeeEmail="";
+        this.employeeId="";
+        this.employeeEmail="";
+
+
+    }
+}
+
+
+////////////////////////////////////Repo/////////////////////////////////
+package com.example.dildo.Repo;
+
+import com.example.dildo.Model.Employee;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import javax.transaction.Transactional;
+
+@Repository
+@Transactional
+public interface EmployeeRepository  extends JpaRepository<Employee,String> {
+
+}
+
+
+
+
+
+////////////////////////////////////service/////////////////////////
+package com.example.dildo.Service;
+
+import com.example.dildo.Model.Employee;
+import org.springframework.stereotype.Service;
+
+@Service
+public interface EmployeeService {
+
+    public void saveOrUpdate(Employee employee);
+
+
+}
+/////////////////////////////////////////////serviceimpl///////////////////
+package com.example.dildo.Service;
+
+import com.example.dildo.Model.Employee;
+import com.example.dildo.Repo.EmployeeRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+@Service
+
+public class EmployeeServiceImpl implements EmployeeService {
+    @Autowired
+    EmployeeRepository crp;
+    @Override
+    public void saveOrUpdate(Employee employee) {
+        System.out.println("heree is cum");
+        crp.save(employee);
+        System.out.println("heree is cum again");
+    }
+}
+///////////////////Controller.............................
+package com.example.dildo.Controller;
+
+import com.example.dildo.Model.Employee;
+import com.example.dildo.Service.EmployeeService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.ModelAndView;
+
+@RequestMapping("/employees")
+@Controller
+public class employeeController {
+
+    @Autowired
+    EmployeeService employeeService;
+    @RequestMapping(value = "/addNew",method = RequestMethod.GET)
+    public ModelAndView addNewEmployee(){
+
+        ModelAndView allEmployees=new ModelAndView( "employeeForm.html");
+        Employee employee=new Employee();
+        allEmployees.addObject("employee",employee);
+        //allRooms.setViewName("roomForm");
+        return allEmployees;
+    }
+
+    @RequestMapping(value = "/save",method = RequestMethod.POST)
+    public ModelAndView saveEmployee(@ModelAttribute("employee") Employee employee){
+        System.out.println(employee.toString());
+        System.out.println("heree is cum asgdjhasdasdasgdj");
+        employeeService.saveOrUpdate(employee);
+        System.out.println("heree is cum asgdjhasgdj");
+        return new ModelAndView("redirect:/employees/addNew");
+
+    }
+
+
+
+}
+/////////////////////////////employeeForm.html////////////////////////////////
+<!DOCTYPE html>
+<html lang="en" xmlns: th="http://www.thymeleaf.org" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script>
+
+        function checkPassword() {
+            var password1 = $("#pass1").val();
+            var password2 = $("#pass2").val();
+            var email = $("#em").val();
+
+
+
+
+            // If password not entered
+            if (password1 == '')
+                alert ("Please enter Password");
+
+            // If confirm password not entered
+            else if (password2 == '')
+                alert ("Please enter confirm password");
+
+            // If Not same return False.
+            else if (password1 != password2) {
+                alert ("\nPassword did not match: Please try again...");
+                return false;
+            }
+
+
+            // If same return True.
+            else{
+                if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email))
+                {
+                    alert("Data Successfully Entered");
+                    return true;
+                }
+               else {
+                    alert("You have entered an invalid email address!")
+                    return false;
+                }
+
+            }
+        }
+        function myFunction() {
+            alert("The form was submitted");
+        }
+    </script>
+</head>
+<body>
+<div class="container">
+<nav class="navbar navbar-expand-sm bg-dark">
+    <ul class="navbar-nav">
+        <li class="nav-item">
+            <a class="nav-link" href="#">Link 1</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#">Link 2</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#">Link 3</a>
+        </li>
+    </ul>
+</nav>
+<br>
+
+
+
+    <div class="row">
+        <div class="col-md-6"></div>
+        <div class="col-md-4">
+     <form  method="post" th:object="${employee}" th:action="@{/employees/save}" onsubmit="return checkPassword(this)"> Enter User Id :
+
+    <input type="text" class="form-control" th:field="*{employeeId}" th:value="${employee.getEmployeeId()}" placeholder="Enter Employee Id">
+
+    <br><hr>Enter Email :
+
+    <input class="form-control"  id="em" type="text" th:field="*{employeeEmail}" th:value="${employee.getEmployeeEmail()}" placeholder="Enter Employee Email">
+    <br><hr>Enter Password
+
+    <input type="text" id="pass1"  class="form-control" th:field="*{employeePassword}" th:value="${employee.getEmployeePassword()}" placeholder="Employee Password">
+
+
+    <br><hr>ReEnter Password
+
+    <input type="text" class="form-control" id="pass2" placeholder="Employee Password">
+
+
+    <input type = submit value = "Submit">
+
+
+</form>
+        </div>
+    </div>
+</div>
+
+
+</body>
+</html>
