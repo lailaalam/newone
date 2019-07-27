@@ -1,0 +1,75 @@
+////////////////html////////////////////////
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../style/new.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <title>Homepage</title>
+    <style>
+        body{
+            background-image:url("../asset/9.jpg") ;
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-attachment: scroll;
+            background-color: lightblue;;
+        }
+        body{
+            text-align: center;
+            padding-top: 12%;
+            font-color: red;
+        }
+    </style>
+</head>
+<body>
+
+<!--<p><button type="button" class="btn btn-dark btn-lg"><a href="#">Examination Form</a></button></p>
+<p><button type="button" class="btn btn-dark btn-lg"><a href="#">Course Form</a></button></p>
+<p><button type="button" class="btn btn-dark btn-lg"><a href="#">Student Information</a></button></p>
+<p><button type="button" class="btn btn-dark btn-lg"><a href="#">Course Registration Entry</a></button></p>-->
+
+<p><a class="semi-transparent-btn with-border btn-lg" role="button" href="#">Examination Form</a></p>
+<p><a class="semi-transparent-btn with-border btn-lg" role="button" href="#">Course Form</a></p>
+<p><a class="semi-transparent-btn with-border btn-lg" role="button" href="#">Student Information</a></p>
+<p><a class="semi-transparent-btn with-border btn-lg"  role="button" href="#">Course Registration Entry</a></p>
+
+</body>
+</html>
+
+/////////////////////////css//////////////////////
+
+.semi-transparent-btn {
+    display: block;
+    box-sizing: border-box;
+    margin: 0 auto;
+    padding: 8px;
+    width: 40%;
+    fixed-width:100px;
+    /*max-width: 200px;
+    background: transparent ; /* fallback color for old browsers */
+    /*background:white /*rgba(255, 255, 255, 0.5)*/;*/
+    border-radius: 8px;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    letter-spacing: 1px;
+    transition: all 0.3s ease-out;
+}
+.semi-transparent-btn:hover,
+.semi-transparent-btn:focus,
+.semi-transparent-btn:active{
+    background:skyblue;
+    color:black;
+    transition: all 0.5s ease-in;
+}
+.semi-transparent:focus {
+    outline: none;
+}
+.with-border {
+    border: .5px solid skyblue ;
+}
