@@ -73,3 +73,112 @@
 .with-border {
     border: .5px solid skyblue ;
 }
+/////////////////////////////exam///////////////////
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <title>Examination Form</title>
+    <style>
+        body{
+            background-image:url("../asset/9.jpg") ;
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-attachment: scroll;
+            background-color: lightblue;;
+
+        }
+        body{
+            padding-top: 25%;
+            padding-bottom: 48%;
+            padding-left: 35%;
+            padding-right: 10%;
+        }
+        table{
+            color:white;
+        }
+      div{
+          text-align:center;
+      }
+
+
+    </style>
+</head>
+<body>
+    <div class="form-group">
+    <form>
+    <table>
+        <tbody>
+        <tr>
+           <td> Enter Deprtment:</td>
+           <td> <input type="text" class="form-control form-control-sm " placeholder="DepartmentName"></td>
+        </tr>
+        <tr>
+            <td> Enter Exam Name:</td>
+            <td> <input type="text" class="form-control form-control-sm" placeholder="Exam Name"></td>
+
+        </tr>
+        <tr>
+            <td> Enter Year:</td>
+            <td>
+                <select class="form-control form-control-sm">
+                    <option>1</option>
+                    <option>2</option>
+                    <option>3</option>
+                    <option>4</option>
+                </select>
+            </td>
+        </tr>
+            <tr>
+            <td> Enter Semester:</td>
+            <td>
+                <select class="form-control form-control-sm">
+                    <option>1</option>
+                    <option>2</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td> Enter Exam Year:</td>
+            <td> <input type="text" class="form-control form-control-sm" placeholder="Exam Year"></td>
+        </tr>
+        </tbody>
+    </table>
+        <br>
+        <button type="submit"  class="btn btn-primary btn-sm" value="save">Save</button>
+    </form>
+    </div>
+<br>
+<br>
+<div>
+    <h4>List Of Exams</h4>
+    <table border="1">
+        <thead>
+        <tr>
+        <td><strong>Department Name</strong></td>
+        <td><strong>Exam Name</strong></td>
+        <td><strong>Year</strong></td>
+        <td><strong>Semester</strong></td>
+        <td><strong>ExamYear</strong></td>
+        <td><strong>Action</strong></td>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>cse</td>
+            <td>3rdyear</td>
+            <td>3</td>
+            <td>1</td>
+            <td>2019</td>
+            <td><span><a role="button" href="#">Edit</a></span><span><a role="button" href="#">Delete</a></span></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>
